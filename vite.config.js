@@ -22,6 +22,7 @@ export default defineConfig({
               "sizes": "192x192",
               "type": "image/png"
             }],
+        start_url: "/testing-pwa-plugin/",
       },
       workbox: {
         runtimeCaching:[
