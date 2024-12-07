@@ -1,1 +1,1 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/pwa-react-vite-test/sw.js', { scope: '/pwa-react-vite-test/' })})}
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/testing-pwa-plugin/sw.js', { scope: '/testing-pwa-plugin/' })})}
