@@ -18,9 +18,9 @@ export default defineConfig({
         theme_color: '#ffffff',
         icons: [
             {
-              "src": "/vite.svg",
-              "sizes": "any",
-              "type": "image/svg+xml"
+              "src": "favicon.png",
+              "sizes": "192x192",
+              "type": "image/png"
             }],
       },
       workbox: {
