@@ -1,1 +1,1 @@
-if('serviceWorker' in navigator) navigator.serviceWorker.register('/pwa-react-vite-test/dev-sw.js?dev-sw', { scope: '/pwa-react-vite-test/', type: 'classic' })
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/testing-pwa-plugin/dev-sw.js?dev-sw', { scope: '/testing-pwa-plugin/', type: 'classic' })

@@ -23,6 +23,22 @@ export default defineConfig({
               "type": "image/png"
             }],
         start_url: "/testing-pwa-plugin/",
+        screenshots: [
+        {
+          src: "screenshot-narrow.png",
+          sizes: "320x320",
+          type: "image/png",
+          form_factor: "narrow",
+          label: "Narrow"
+        },
+        {
+          src: "screenshot-wide.png",
+          sizes: "320x320",
+          type: "image/png",
+          form_factor: "wide",
+          label: "Wide"
+        }
+        ],
       },
       workbox: {
         runtimeCaching:[
