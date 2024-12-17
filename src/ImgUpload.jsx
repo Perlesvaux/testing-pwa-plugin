@@ -28,16 +28,21 @@ export default function ImgUpload(){
     {
       state &&
       state.map((img, i)=> 
-        <img 
-          key={i} 
-          src={img} 
-          alt="Uploaded img" 
-          style={{maxWidth:"300px", marginTop:"20px"}} 
-          onLoad={()=> URL.revokeObjectURL(state)} /> 
+        <div key={i}>
+             
+          <img 
+            src={img} 
+            alt="Uploaded img" 
+            style={{maxWidth:"300px", marginTop:"20px"}} 
+            onLoad={()=> URL.revokeObjectURL(state)} 
+          /> 
+
+            <button onClick={()=>{ setState(state => state.filter((_, indx)=> indx!==i)) }}> elpepe </button>
+        </div>
       )
     }
   </>)
-
+//document.getElementById("demo").innerHTML = ages.filter((age, indx)=>{ return indx != 1 })
   //return (<> 
   //  <input type="file" accept="image/*" multiple onChange={handleImageChange} />
   //  <br />
