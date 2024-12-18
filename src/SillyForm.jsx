@@ -53,7 +53,17 @@ export default function Sillyform(){
     //Object.entries(state).map(([key, {value}])=> [key, value])
     //Object.entries(state).map(([key, {value}])=>[key, value])
     )
+    downloadJSON()
   }
+
+
+  const downloadJSON = () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `CV - ${state.name.value}.json`;
+    link.click();
+  };
 
 
   return (<form onSubmit={handleSubmit}>
@@ -69,8 +79,8 @@ export default function Sillyform(){
               />
             : <Input 
                 name={property} 
-                kind={state[property].kind} 
-                variable={state[property].value} 
+                type={state[property].kind} 
+                value={state[property].value} 
                 changer={(e)=> dispatch({type:"updating", field:property, value:e.target.value})} 
                 deleter={()=>dispatch({type:"delete", field:property})} 
               />
