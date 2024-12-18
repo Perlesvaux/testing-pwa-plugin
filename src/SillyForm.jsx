@@ -1,6 +1,7 @@
 import {useReducer} from 'react'
 import InputImage from './InputImage.jsx'
 import Input from './Input.jsx'
+import InputJSON from './InputJSON.jsx'
 
 
 const initialState = {
@@ -9,7 +10,7 @@ const initialState = {
   height: {value:"",kind:"text"},
   sex:    {value:"",kind:"text"},
   DOB:    {value:"",kind:"date"},
-  pfp:    {value:"",kind:"file"}
+  pfp:    {value:"",kind:"image"}
 }
 
 
@@ -23,6 +24,9 @@ function reducer(state, action) {
 
     case "delete":
       return {...state, [action.field]:{...state[action.field], value:""}}
+
+    case "clone":
+      return action.dump
 
     case "initialState":
       return initialState;
@@ -66,12 +70,35 @@ export default function Sillyform(){
   };
 
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target.result);
+          if ('name' in json ) {
+            dispatch({ type:"clone", dump:json });
+          } else {
+            alert('Invalid JSON format!');
+          }
+        } catch (error) {
+          alert('Error reading JSON file!', error);
+        }
+      };
+      reader.readAsText(file);
+    }
+  }
+
+
+
   return (<form onSubmit={handleSubmit}>
+    <InputJSON name={"Load from file"} changer={handleFileUpload}  />
     {
       Object.keys(initialState).map((property, i)=>(
         <div key={i}>
           {
-            state[property].kind === "file"
+            state[property].kind === "image"
             ? <InputImage 
                 name={property} 
                 changer={(e)=>handleImageChange(e,property)} 
