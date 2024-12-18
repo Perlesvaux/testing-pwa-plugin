@@ -1,4 +1,5 @@
 import {useReducer, useRef} from 'react'
+import UploadImage from './UploadImage.jsx'
 
 const initialState0 = {
   name: "",
@@ -14,7 +15,7 @@ const initialState1 = {
   sex:    {value:"",kind:"text"}
 }
 
-const initialState2 = {
+const initialState = {
   name:   {value:"",kind:"text"},
   age:    {value:"",kind:"number"},
   height: {value:"",kind:"text"},
@@ -47,16 +48,16 @@ function reducer(state, action) {
 
 export default function Sillyform(){
 
-  const pfpRef = useRef(null)
+  //const pfpRef = useRef(null)
 
-  const initialState = {
-    name:   { kind:"text"   ,value:"" },
-    age:    { kind:"number" ,value:"" },
-    height: { kind:"text"   ,value:"" },
-    sex:    { kind:"text"   ,value:"" },
-    DOB:    { kind:"date"   ,value:"" },
-    pfp:    { kind:"file"   ,value:"", reference:pfpRef }
-  }
+  //const initialState = {
+  //  name:   { kind:"text"   ,value:"" },
+  //  age:    { kind:"number" ,value:"" },
+  //  height: { kind:"text"   ,value:"" },
+  //  sex:    { kind:"text"   ,value:"" },
+  //  DOB:    { kind:"date"   ,value:"" },
+  //  pfp:    { kind:"file"   ,value:"", reference:pfpRef }
+  //}
   const [state, dispatch] = useReducer(reducer, initialState)
 
 
@@ -98,15 +99,17 @@ Object.fromEntries(Object.entries(state).map(([key, {value}]) => [key, value] ))
     {
       Object.keys(initialState).map((property, i)=>(
         <div key={i}>
-        <label >
-          { property }
           {
             state[property].kind === "file"
-            ?  <input type={state[property].kind} accept="image/*" ref={pfpRef} onChange={(e)=>handleImageChange(e,property)}/>
-            :  <input type={state[property].kind} value={state[property].value} onChange={(e)=> dispatch({type:"updating", field:property, value:e.target.value})} />
-          }
+            ?  <UploadImage name={property} changer={(e)=>handleImageChange(e,property)} deleter={()=> dispatch({type:"delete", field:property}) }/>
+            :  (<>
+        <label >
+          { property }
+                  <input type={state[property].kind} value={state[property].value} onChange={(e)=> dispatch({type:"updating", field:property, value:e.target.value})} />
         </label>
-        <div onClick={()=>{ dispatch({type:"delete", field:property}); if ( 'reference' in state[property] ) state[property].reference.current.value='' }}>X</div>
+                  <div onClick={()=>{ dispatch({type:"delete", field:property}); if ( 'reference' in state[property] ) state[property].reference.current.value='' }}>X</div>
+                </>)
+          }
           </div>
         )
       )
