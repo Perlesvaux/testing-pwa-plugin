@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-export default function UploadImage({ name, changer, deleter }){
+export default function InputImage({ name, changer, deleter }){
   const ref = useRef(null)
   return(<>
     <label> {name}
