@@ -25,12 +25,27 @@ export default function InputList(){
       <input type="number" name="age" value={current.age} onChange={getInput} />
     </label>
 
-    <div onClick={()=>{setState( { friends:[...state.friends, current] } ) }}> ok </div>
+    <div onClick={()=>{setState( { friends:[...state.friends, current] } ) ; setCurrent({ name:'', age:'' }) }}> ok </div>
 
     
     {state.friends.map((elem, i)=>
       <div key={i}>
-        <div> {elem.name} is {elem.age} years old </div>
+        <input type="text"  value={elem.name} onChange={(e)=>
+        {
+            const updated = [...state.friends]
+            updated[i].name = e.target.value
+            console.log(updated)
+            setState({friends:updated})
+        }
+          } />
+        <input type="number" value={elem.age} onChange={(e)=>
+        {
+            const updated = [...state.friends]
+            updated[i].age = e.target.value
+            console.log(updated)
+            setState({friends:updated})
+        }
+          } />
         <div onClick={()=>{setState({ friends:state.friends.filter((elem, ii)=> ii!==i   )  })}}>X</div>
       </div>)}
 
