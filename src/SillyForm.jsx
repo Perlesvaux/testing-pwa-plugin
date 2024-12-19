@@ -2,6 +2,7 @@ import {useReducer} from 'react'
 import InputImage from './InputImage.jsx'
 import Input from './Input.jsx'
 import InputJSON from './InputJSON.jsx'
+import InputList from './InputList.jsx'
 
 
 const initialState = {
@@ -79,10 +80,6 @@ export default function Sillyform(){
           const json = JSON.parse(e.target.result);
           //if ('name' in json ) {
           if (Object.keys(state).map(e=> e in json).reduce((acc, element)=> acc && element )) {
-
-            //console.log(Object.keys(state).map(e=> e in json).reduce((acc, element)=> acc && element ))
-
-
             dispatch({ type:"clone", dump:json });
           } else {
             alert('Invalid JSON format!');
@@ -96,29 +93,37 @@ export default function Sillyform(){
   }
 
 
+  function renderInputField(kind, property){
+    switch (kind) {
+      case "image":
+        return <InputImage 
+                  name={property} 
+                  changer={(e)=>handleImageChange(e,property)} 
+                  deleter={()=> dispatch({type:"delete", field:property}) }
+                />
+
+      default:
+        return <Input 
+                  name={property} 
+                  type={state[property].kind} 
+                  value={state[property].value} 
+                  changer={(e)=> dispatch({type:"updating", field:property, value:e.target.value})} 
+                  deleter={()=>dispatch({type:"delete", field:property})} 
+               />
+    }
+  }
+
+
 
   return (<form onSubmit={handleSubmit}>
+
+    <InputList />
+
+
     <InputJSON name={"Load from file"} changer={handleFileUpload}  />
     {
-      Object.keys(initialState).map((property, i)=>(
-        <div key={i}>
-          {
-            state[property].kind === "image"
-            ? <InputImage 
-                name={property} 
-                changer={(e)=>handleImageChange(e,property)} 
-                deleter={()=> dispatch({type:"delete", field:property}) }
-              />
-            : <Input 
-                name={property} 
-                type={state[property].kind} 
-                value={state[property].value} 
-                changer={(e)=> dispatch({type:"updating", field:property, value:e.target.value})} 
-                deleter={()=>dispatch({type:"delete", field:property})} 
-              />
-          }
-          </div>
-        )
+      Object.keys(initialState).map((property, i)=>
+        <div key={i}> { renderInputField(state[property].kind, property)  } </div>
       )
     }
 
