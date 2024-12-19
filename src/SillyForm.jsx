@@ -77,7 +77,12 @@ export default function Sillyform(){
       reader.onload = (e) => {
         try {
           const json = JSON.parse(e.target.result);
-          if ('name' in json ) {
+          //if ('name' in json ) {
+          if (Object.keys(state).map(e=> e in json).reduce((acc, element)=> acc && element )) {
+
+            //console.log(Object.keys(state).map(e=> e in json).reduce((acc, element)=> acc && element ))
+
+
             dispatch({ type:"clone", dump:json });
           } else {
             alert('Invalid JSON format!');
