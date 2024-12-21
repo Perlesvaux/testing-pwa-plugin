@@ -10,6 +10,7 @@ const parts = { name:{value:'', kind:'text'}, age:{value:'', kind:'number'} }
 function reducer (state, action){
 
   switch (action.type) {
+
     case "addToList":
       return { ...state, [action.field]:{...state[action.field], value:[...state[action.field].value, action.value]}}
 
@@ -30,35 +31,98 @@ function reducer (state, action){
   
 }
 
+function subReducer (state, action){
+
+  switch(action.type){
+    case "create":
+      return { ...state, [action.field]:{...state[action.field], value:action.value} }
+
+    case "erase":
+      return { ...state, [action.field]:{...state[action.field], value:''} }
+
+    case "reset":
+    return parts
+
+    default:
+      throw new Error(`Unknown action: ${action.type}`);
+
+  }
+
+}
+
 export default function InputList(){
 
   const [state, dispatch] = useReducer(reducer, initialState)
+  const [current, execute] = useReducer(subReducer, parts)
   //const [state, setState] = useState({ friends:[]  }) // {name:"carlos", age:20}, {name:"alf", age:32}
 
-  const [ current, setCurrent ] = useState ( parts )
+  //const [ current, setCurrent ] = useState ( parts )
+  //
+  //
+  //function getInput(e){
+  //  setCurrent({...current, [e.target.name]:{...current[e.target.name], value:e.target.value}})
+  //}
 
-
-  function getInput(e){
-    setCurrent({...current, [e.target.name]:{...current[e.target.name], value:e.target.value}})
-  }
-
+        //(
+        //  <Input key={i}
+        //    name={property} 
+        //    type={state[property].kind} 
+        //    value={state[property].value} 
+        //    changer={ getInput } 
+        //    deleter={()=>setCurrent(parts)} 
+        //  />
+        //))
   return (<>
-    <label >
-      name
-      <input type={current.name.kind} name="name" value={current.name.value} onChange={getInput} />
-    </label>
+
+    {
+      Object.keys(initialState).map((property, i)=>
+
+        (<div key={i}><label>
+          {
+            Object.keys(parts).map((part, ind)=>
+
+              (
+
+                //<div> {part} {ind} {property} {i} {parts[part].kind}</div>
+
+                <Input key={ind}
+                  name={part} 
+                  type={current[part].kind} 
+                  value={current[part].value} 
+                  changer={ (e)=>execute({type:"create", field:part, value:e.target.value}) } 
+                  deleter={ ()=>execute({type:"erase", field:part}) } 
+                />
 
 
-    <label >
-      age
-      <input type={current.age.kind} name="age" value={current.age.value} onChange={getInput} />
-    </label>
+              )
 
-    <div onClick={()=>{dispatch( { type:"addToList", field:"friends", value: current} ) ; setCurrent(parts) }}> ok </div>
+            )
+          }
+        </label>
+
+        <div onClick={()=>{dispatch({ type:"addToList", field:"friends", value: current}) ; execute({type:"reset"}) }}> ok </div>
+
+        </div>)
+      )
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     
     {state.friends.value.map((elem, i)=>
       <div key={i}>
+
+
         <input type="text"  value={elem.name.value} onChange={(e)=>
             {
                 dispatch({ type:"updateEntryFromList", field: "friends", part:"name", index:i, value:e.target.value })
@@ -78,3 +142,14 @@ export default function InputList(){
   </>)
 }
 
+    //<div onClick={()=>{dispatch( { type:"addToList", field:"friends", value: current} ) ; execute({type:"reset"}) }}> ok </div>
+    //<label >
+    //  name
+    //  <input type={current.name.kind} name="name" value={current.name.value} onChange={getInput} />
+    //</label>
+    //
+    //
+    //<label >
+    //  age
+    //  <input type={current.age.kind} name="age" value={current.age.value} onChange={getInput} />
+    //</label>
