@@ -66,7 +66,39 @@ export default function InputList(){
     }
   }
 
+  
+  function imageChanger(event, property, part, i){
+    const file = event.target.files[0]
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file)
+      reader.onloadend = ()=> dispatch({ type:"updateEntryFromList", field: property, part:part, index:i, value:reader.result }) 
+                                       
+      console.log(':v', property, file.name, part, i )
+    }
+  }
+
   function renderInputField(kind, property){
+    switch (kind) {
+      case "image":
+        return <InputImage 
+                  name={property} 
+                  changer={(e)=>handleImageChange(e,property)} 
+                  deleter={()=> execute({type:"erase", field:property}) }
+                />
+
+      default:
+        return  <Input 
+                  name={property} 
+                  type={kind} 
+                  value={current[property].value} 
+                  changer={ (e)=>execute({type:"create", field:property, value:e.target.value}) } 
+                  deleter={ ()=>execute({type:"erase", field:property}) } 
+                />
+    }
+  }
+
+  function renderResults(kind, property){
     switch (kind) {
       case "image":
         return <InputImage 
@@ -106,6 +138,7 @@ export default function InputList(){
             <div key={i}>
               <input type={elem.name.kind}  value={elem.name.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"name", index:i, value:e.target.value })} />
               <input type={elem.age.kind} value={elem.age.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"age", index:i, value:e.target.value })} />
+              <input type="file" accept="image/*" onChange={(e)=>imageChanger(e, property, "photo", i)}/>
               {elem.photo.value && <img src={elem.photo.value} />}
               <div onClick={()=>{dispatch({type:"removeFromList", field:property, value:i})}}>X</div>
             </div>)
