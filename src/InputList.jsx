@@ -26,6 +26,15 @@ function reducer (state, action){
       return {...state, [action.field]:{...state[action.field], value:updated }}
     }
 
+    case "erase":
+    {
+      const updated = [ ...state[action.field].value ]
+      updated[action.index][action.part].value = '' 
+      console.log(updated)
+      return {...state, [action.field]:{...state[action.field], value:updated }}
+    }
+      //return { ...state, [action.field]:{...state[action.field], value:[...state[action.field].value] } }
+
     default:
       throw new Error(`Unknown action: ${action.type}`);
   }
@@ -102,9 +111,9 @@ export default function InputList(){
     switch (kind) {
       case "image":
         return <InputImage 
-                  name={property} 
-                  changer={(e)=>handleImageChange(e,property)} 
-                  deleter={()=> execute({type:"erase", field:property}) }
+                  name={part} 
+                  changer={(e)=>imageChanger(e, property, part, i)} 
+                  deleter={()=> dispatch({type:"erase", field:property, part:part, index:i}) }
                 />
 
       default:
@@ -135,10 +144,9 @@ export default function InputList(){
           {
             state[property].value.map((elem, i)=>
             <div key={i}>
-                {renderResults(elem.name.kind, property, "name", i, elem.name.value)}
-              <input type={elem.name.kind}  value={elem.name.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"name", index:i, value:e.target.value })} />
-              <input type={elem.age.kind} value={elem.age.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"age", index:i, value:e.target.value })} />
-              <input type="file" accept="image/*" onChange={(e)=>imageChanger(e, property, "photo", i)}/>
+              {renderResults(elem.name.kind, property, "name", i, elem.name.value)}
+              {renderResults(elem.age.kind, property, "age", i, elem.age.value)}
+              {renderResults(elem.photo.kind, property, "photo", i )}
               {elem.photo.value && <img src={elem.photo.value} />}
               <div onClick={()=>{dispatch({type:"removeFromList", field:property, value:i})}}>X</div>
             </div>)
@@ -166,6 +174,7 @@ export default function InputList(){
   </>)
 }
 
+              //<input type="file" accept="image/*" onChange={(e)=>imageChanger(e, property, "photo", i)}/>
 
     //{state.pfp.value && <img src={state.pfp.value} />}
     //<div onClick={()=>{dispatch( { type:"addToList", field:"friends", value: current} ) ; execute({type:"reset"}) }}> ok </div>
