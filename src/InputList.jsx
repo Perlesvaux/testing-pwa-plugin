@@ -104,8 +104,8 @@ export default function InputList(){
           {
             state[property].value.map((elem, i)=>
             <div key={i}>
-              <input type="text"  value={elem.name.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"name", index:i, value:e.target.value })} />
-              <input type="number" value={elem.age.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"age", index:i, value:e.target.value })} />
+              <input type={elem.name.kind}  value={elem.name.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"name", index:i, value:e.target.value })} />
+              <input type={elem.age.kind} value={elem.age.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"age", index:i, value:e.target.value })} />
               {elem.photo.value && <img src={elem.photo.value} />}
               <div onClick={()=>{dispatch({type:"removeFromList", field:property, value:i})}}>X</div>
             </div>)
