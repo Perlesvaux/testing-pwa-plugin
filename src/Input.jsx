@@ -5,6 +5,6 @@ export default function Input({ name, type, value, changer, deleter }){
       { name }
       <input type={type} value={value} onChange={changer} />
     </label>
-    <div onClick={deleter}>X</div>
+    { deleter && <div onClick={deleter}>X</div> }
   </>)
 }

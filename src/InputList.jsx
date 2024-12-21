@@ -98,7 +98,7 @@ export default function InputList(){
     }
   }
 
-  function renderResults(kind, property){
+  function renderResults(kind, property, part, i, value){
     switch (kind) {
       case "image":
         return <InputImage 
@@ -109,11 +109,10 @@ export default function InputList(){
 
       default:
         return  <Input 
-                  name={property} 
+                  name={part} 
                   type={kind} 
-                  value={current[property].value} 
-                  changer={ (e)=>execute({type:"create", field:property, value:e.target.value}) } 
-                  deleter={ ()=>execute({type:"erase", field:property}) } 
+                  value={value} 
+                  changer={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:part, index:i, value:e.target.value })} 
                 />
     }
   }
@@ -136,6 +135,7 @@ export default function InputList(){
           {
             state[property].value.map((elem, i)=>
             <div key={i}>
+                {renderResults(elem.name.kind, property, "name", i, elem.name.value)}
               <input type={elem.name.kind}  value={elem.name.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"name", index:i, value:e.target.value })} />
               <input type={elem.age.kind} value={elem.age.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"age", index:i, value:e.target.value })} />
               <input type="file" accept="image/*" onChange={(e)=>imageChanger(e, property, "photo", i)}/>
