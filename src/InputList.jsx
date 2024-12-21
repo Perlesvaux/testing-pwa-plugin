@@ -1,8 +1,11 @@
 import {useReducer, useState} from 'react'
+import Input from './Input.jsx'
 
 const initialState = {
   friends: { value:[], kind:"list" },
 }
+
+const parts = { name:{value:'', kind:'text'}, age:{value:'', kind:'number'} }
 
 function reducer (state, action){
 
@@ -15,10 +18,10 @@ function reducer (state, action){
 
     case "updateEntryFromList":
     {
-        const updated = [ ...state[action.field].value ]
-        updated[action.index][action.part] = action.value 
-        console.log(updated)
-        return {...state, [action.field]:{...state[action.field], value:updated }}
+      const updated = [ ...state[action.field].value ]
+      updated[action.index][action.part].value = action.value 
+      console.log(updated)
+      return {...state, [action.field]:{...state[action.field], value:updated }}
     }
 
     default:
@@ -32,49 +35,39 @@ export default function InputList(){
   const [state, dispatch] = useReducer(reducer, initialState)
   //const [state, setState] = useState({ friends:[]  }) // {name:"carlos", age:20}, {name:"alf", age:32}
 
-  const [ current, setCurrent ] = useState ( {
-    name:'', age:''
-  } )
+  const [ current, setCurrent ] = useState ( parts )
 
 
   function getInput(e){
-    setCurrent({...current, [e.target.name]:e.target.value})
+    setCurrent({...current, [e.target.name]:{...current[e.target.name], value:e.target.value}})
   }
 
   return (<>
     <label >
       name
-      <input type="text" name="name" value={current.name} onChange={getInput} />
+      <input type={current.name.kind} name="name" value={current.name.value} onChange={getInput} />
     </label>
 
 
     <label >
       age
-      <input type="number" name="age" value={current.age} onChange={getInput} />
+      <input type={current.age.kind} name="age" value={current.age.value} onChange={getInput} />
     </label>
 
-    <div onClick={()=>{dispatch( { type:"addToList", field:"friends", value: current} ) ; setCurrent({ name:'', age:'' }) }}> ok </div>
+    <div onClick={()=>{dispatch( { type:"addToList", field:"friends", value: current} ) ; setCurrent(parts) }}> ok </div>
 
     
     {state.friends.value.map((elem, i)=>
       <div key={i}>
-        <input type="text"  value={elem.name} onChange={(e)=>
-        {
-            dispatch({ type:"updateEntryFromList", field: "friends", part:"name", index:i, value:e.target.value })
-            //const updated = [...state.friends]
-            //updated[i].name = e.target.value
-            //console.log(updated)
-            //setState({friends:updated})
-        }
+        <input type="text"  value={elem.name.value} onChange={(e)=>
+            {
+                dispatch({ type:"updateEntryFromList", field: "friends", part:"name", index:i, value:e.target.value })
+            }
           } />
-        <input type="number" value={elem.age} onChange={(e)=>
-        {
-            dispatch({ type:"updateEntryFromList", field: "friends", part:"age", index:i, value:e.target.value })
-            //const updated = [...state.friends]
-            //updated[i].age = e.target.value
-            //console.log(updated)
-            //setState({friends:updated})
-        }
+        <input type="number" value={elem.age.value} onChange={(e)=>
+            {
+              dispatch({ type:"updateEntryFromList", field: "friends", part:"age", index:i, value:e.target.value })
+            }
           } />
         <div onClick={()=>{dispatch({type:"removeFromList", field:"friends", value:i})}}>X</div>
       </div>)}
