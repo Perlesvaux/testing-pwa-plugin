@@ -6,7 +6,7 @@ const initialState = {
   friends: { value:[], kind:"list" },
 }
 
-const parts = { name:{value:'', kind:'text'}, age:{value:'', kind:'number'} }
+const parts = { name:{value:'', kind:'text'}, age:{value:'', kind:'number'}, photo:{value:'', kind:'image'} }
 
 function reducer (state, action){
 
@@ -61,7 +61,7 @@ export default function InputList(){
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file)
-      reader.onloadend = ()=> dispatch({type:"create", field:p, value:reader.result}) 
+      reader.onloadend = ()=> execute({type:"create", field:p, value:reader.result}) 
       console.log(':v', p, file, file.name)
     }
   }
@@ -72,7 +72,7 @@ export default function InputList(){
         return <InputImage 
                   name={property} 
                   changer={(e)=>handleImageChange(e,property)} 
-                  deleter={()=> dispatch({type:"delete", field:property}) }
+                  deleter={()=> execute({type:"erase", field:property}) }
                 />
 
       default:
@@ -106,6 +106,7 @@ export default function InputList(){
             <div key={i}>
               <input type="text"  value={elem.name.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"name", index:i, value:e.target.value })} />
               <input type="number" value={elem.age.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"age", index:i, value:e.target.value })} />
+              {elem.photo.value && <img src={elem.photo.value} />}
               <div onClick={()=>{dispatch({type:"removeFromList", field:property, value:i})}}>X</div>
             </div>)
           }
