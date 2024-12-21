@@ -1,5 +1,6 @@
-import {useReducer, useState} from 'react'
+import {useReducer} from 'react'
 import Input from './Input.jsx'
+import InputImage from './InputImage.jsx'
 
 const initialState = {
   friends: { value:[], kind:"list" },
@@ -62,6 +63,17 @@ export default function InputList(){
   //function getInput(e){
   //  setCurrent({...current, [e.target.name]:{...current[e.target.name], value:e.target.value}})
   //}
+
+  function handleImageChange(event, p){
+    const file = event.target.files[0]
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file)
+      reader.onloadend = ()=> dispatch({type:"create", field:p, value:reader.result}) 
+      console.log(':v', p, file, file.name)
+    }
+  }
+
   function renderInputField(kind, property){
     switch (kind) {
       case "image":
