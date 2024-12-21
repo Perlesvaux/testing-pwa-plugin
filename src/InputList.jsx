@@ -55,14 +55,6 @@ export default function InputList(){
 
   const [state, dispatch] = useReducer(reducer, initialState)
   const [current, execute] = useReducer(subReducer, parts)
-  //const [state, setState] = useState({ friends:[]  }) // {name:"carlos", age:20}, {name:"alf", age:32}
-
-  //const [ current, setCurrent ] = useState ( parts )
-  //
-  //
-  //function getInput(e){
-  //  setCurrent({...current, [e.target.name]:{...current[e.target.name], value:e.target.value}})
-  //}
 
   function handleImageChange(event, p){
     const file = event.target.files[0]
@@ -94,49 +86,32 @@ export default function InputList(){
     }
   }
 
-        //(
-        //  <Input key={i}
-        //    name={property} 
-        //    type={state[property].kind} 
-        //    value={state[property].value} 
-        //    changer={ getInput } 
-        //    deleter={()=>setCurrent(parts)} 
-        //  />
-        //))
   return (<>
-
     {
       Object.keys(initialState).map((property, i)=>
 
         (<div key={i}>
+
           {
             Object.keys(parts).map((part, ind)=>
-
-              (<label key={ind}> { renderInputField(current[part].kind, part) } </label>
-                
-
-                //<div> {part} {ind} {property} {i} {parts[part].kind}</div>
-
-                //<Input key={ind}
-                //  name={part} 
-                //  type={current[part].kind} 
-                //  value={current[part].value} 
-                //  changer={ (e)=>execute({type:"create", field:part, value:e.target.value}) } 
-                //  deleter={ ()=>execute({type:"erase", field:part}) } 
-                ///>
-
-
-              )
-
+              (<label key={ind}> { renderInputField(current[part].kind, part) } </label>)
             )
           }
 
-        <div onClick={()=>{dispatch({ type:"addToList", field:"friends", value: current}) ; execute({type:"reset"}) }}> ok </div>
+          <div onClick={()=>{dispatch({ type:"addToList", field:property, value: current}) ; execute({type:"reset"}) }}> ok </div>
+
+
+          {
+            state[property].value.map((elem, i)=>
+            <div key={i}>
+              <input type="text"  value={elem.name.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"name", index:i, value:e.target.value })} />
+              <input type="number" value={elem.age.value} onChange={(e)=> dispatch({ type:"updateEntryFromList", field: property, part:"age", index:i, value:e.target.value })} />
+              <div onClick={()=>{dispatch({type:"removeFromList", field:property, value:i})}}>X</div>
+            </div>)
+          }
 
         </div>)
-      )
-
-    }
+      )}
 
 
 
@@ -150,22 +125,6 @@ export default function InputList(){
 
 
     
-    {state.friends.value.map((elem, i)=>
-      <div key={i}>
-
-
-        <input type="text"  value={elem.name.value} onChange={(e)=>
-            {
-                dispatch({ type:"updateEntryFromList", field: "friends", part:"name", index:i, value:e.target.value })
-            }
-          } />
-        <input type="number" value={elem.age.value} onChange={(e)=>
-            {
-              dispatch({ type:"updateEntryFromList", field: "friends", part:"age", index:i, value:e.target.value })
-            }
-          } />
-        <div onClick={()=>{dispatch({type:"removeFromList", field:"friends", value:i})}}>X</div>
-      </div>)}
 
 
 
@@ -173,6 +132,8 @@ export default function InputList(){
   </>)
 }
 
+
+    //{state.pfp.value && <img src={state.pfp.value} />}
     //<div onClick={()=>{dispatch( { type:"addToList", field:"friends", value: current} ) ; execute({type:"reset"}) }}> ok </div>
     //<label >
     //  name
@@ -184,3 +145,22 @@ export default function InputList(){
     //  age
     //  <input type={current.age.kind} name="age" value={current.age.value} onChange={getInput} />
     //</label>
+//
+//
+//
+    //{state.friends.value.map((elem, i)=>
+    //  <div key={i}>
+    //
+    //
+    //    <input type="text"  value={elem.name.value} onChange={(e)=>
+    //        {
+    //            dispatch({ type:"updateEntryFromList", field: "friends", part:"name", index:i, value:e.target.value })
+    //        }
+    //      } />
+    //    <input type="number" value={elem.age.value} onChange={(e)=>
+    //        {
+    //          dispatch({ type:"updateEntryFromList", field: "friends", part:"age", index:i, value:e.target.value })
+    //        }
+    //      } />
+    //    <div onClick={()=>{dispatch({type:"removeFromList", field:"friends", value:i})}}>X</div>
+    //  </div>)}
