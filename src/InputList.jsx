@@ -62,6 +62,25 @@ export default function InputList(){
   //function getInput(e){
   //  setCurrent({...current, [e.target.name]:{...current[e.target.name], value:e.target.value}})
   //}
+  function renderInputField(kind, property){
+    switch (kind) {
+      case "image":
+        return <InputImage 
+                  name={property} 
+                  changer={(e)=>handleImageChange(e,property)} 
+                  deleter={()=> dispatch({type:"delete", field:property}) }
+                />
+
+      default:
+        return  <Input 
+                  name={property} 
+                  type={kind} 
+                  value={current[property].value} 
+                  changer={ (e)=>execute({type:"create", field:property, value:e.target.value}) } 
+                  deleter={ ()=>execute({type:"erase", field:property}) } 
+                />
+    }
+  }
 
         //(
         //  <Input key={i}
@@ -77,28 +96,28 @@ export default function InputList(){
     {
       Object.keys(initialState).map((property, i)=>
 
-        (<div key={i}><label>
+        (<div key={i}>
           {
             Object.keys(parts).map((part, ind)=>
 
-              (
+              (<label key={ind}> { renderInputField(current[part].kind, part) } </label>
+                
 
                 //<div> {part} {ind} {property} {i} {parts[part].kind}</div>
 
-                <Input key={ind}
-                  name={part} 
-                  type={current[part].kind} 
-                  value={current[part].value} 
-                  changer={ (e)=>execute({type:"create", field:part, value:e.target.value}) } 
-                  deleter={ ()=>execute({type:"erase", field:part}) } 
-                />
+                //<Input key={ind}
+                //  name={part} 
+                //  type={current[part].kind} 
+                //  value={current[part].value} 
+                //  changer={ (e)=>execute({type:"create", field:part, value:e.target.value}) } 
+                //  deleter={ ()=>execute({type:"erase", field:part}) } 
+                ///>
 
 
               )
 
             )
           }
-        </label>
 
         <div onClick={()=>{dispatch({ type:"addToList", field:"friends", value: current}) ; execute({type:"reset"}) }}> ok </div>
 
